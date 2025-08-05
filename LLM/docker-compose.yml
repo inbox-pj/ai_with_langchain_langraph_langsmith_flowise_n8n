@@ -9,6 +9,8 @@ services:
       - ollama_data:/root/.ollama
     environment:
       - OLLAMA_HOST=0.0.0.0:11434
+    networks:
+      - llm_network
     command: >
       sh -c "
         ollama serve &
@@ -19,6 +21,7 @@ services:
         wait
       "
     restart: unless-stopped
+
   chroma:
     image: chromadb/chroma:latest
     container_name: chroma
@@ -27,8 +30,13 @@ services:
     environment:
       - CHROMA_SERVER_HOST=0.0.0.0
       - CHROMA_SERVER_HTTP_PORT=8000
+    volumes:
+      - chroma_data:/app/data
+    networks:
+      - llm_network
     command: ["chroma", "run", "--host", "0.0.0.0", "--port", "8000"]
     restart: unless-stopped
+
   anythingllm:
     image: mintplexlabs/anythingllm:latest
     container_name: anythingllm
@@ -47,10 +55,13 @@ services:
         DEFAULT_VAULT=local
     volumes:
       - anythingllm_data:/app/server/storage
+    networks:
+      - llm_network
     depends_on:
       - ollama
       - chroma
     restart: unless-stopped
+
   flowwise:
     image: flowwiseai/flowwise:latest
     container_name: flowwise
@@ -62,15 +73,25 @@ services:
       - OLLAMA_HOST=http://ollama:11434
     volumes:
       - flowwise_data:/app/data
-      - ./uploads:/app/public/uploads
+      - /Users/pjaiswal/Documents:/app/public/uploads
+    networks:
+      - llm_network
     depends_on:
       - ollama
       - chroma
+    command: >
+      sh -c "
+        mkdir -p /app/public/uploads &&
+        flowwise
+      "
     restart: unless-stopped
+
 volumes:
   ollama_data:
+  chroma_data:
   anythingllm_data:
   flowwise_data:
+
 networks:
-  default:
-    name: llm-network
+  llm-network:
+    driver: bridge
