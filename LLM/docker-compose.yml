@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   ollama:
-    image: ollama/ollama:latest
+    build: .
     container_name: ollama
     ports:
       - "11434:11434"
@@ -10,16 +10,7 @@ services:
     environment:
       - OLLAMA_HOST=0.0.0.0:11434
     networks:
-      - llm_network
-    command: >
-      sh -c "
-        ollama serve &
-        sleep 10 &&
-        ollama pull gemma3:1b &&
-        ollama pull nomic-embed-text:latest &&
-        echo 'Models ready: gemma3:1b, nomic-embed-text' &&
-        wait
-      "
+      - llm-network
     restart: unless-stopped
 
   chroma:
@@ -30,67 +21,61 @@ services:
     environment:
       - CHROMA_SERVER_HOST=0.0.0.0
       - CHROMA_SERVER_HTTP_PORT=8000
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS='["*"]'
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
     volumes:
-      - chroma_data:/app/data
+      - chroma_data:/data
     networks:
-      - llm_network
-    command: ["chroma", "run", "--host", "0.0.0.0", "--port", "8000"]
+      - llm-network
     restart: unless-stopped
 
-  anythingllm:
-    image: mintplexlabs/anythingllm:latest
-    container_name: anythingllm
-    ports:
-      - "3001:3001"
-    environment:
-      - STORAGE_DIR=/app/server/storage
-      - DATABASE_PATH=/app/server/storage/db.sqlite
-      - SERVER_PORT=3001
-      - DOTENV=|
-        OLLAMA_BASE_URL=http://ollama:11434
-        EMBEDDING_ENGINE=ollama
-        OLLAMA_MODEL=gemma3:1b
-        VECTOR_DB=chroma
-        CHROMA_SERVER_URL=http://chroma:8000
-        DEFAULT_VAULT=local
-    volumes:
-      - anythingllm_data:/app/server/storage
-    networks:
-      - llm_network
-    depends_on:
-      - ollama
-      - chroma
-    restart: unless-stopped
+#  anythingllm:
+#    image: mintplexlabs/anythingllm:latest
+#    container_name: anythingllm
+#    ports:
+#      - "3001:3001"
+#    environment:
+#      - STORAGE_DIR=/app/server/storage
+#      - DATABASE_PATH=/app/server/storage/db.sqlite
+#      - SERVER_PORT=3001
+#      - DOTENV=|
+#        OLLAMA_BASE_URL=http://ollama:11434
+#        EMBEDDING_ENGINE=ollama
+#        OLLAMA_MODEL=gemma3:1b
+#        VECTOR_DB=chroma
+#        CHROMA_SERVER_URL=http://chroma:8000
+#        DEFAULT_VAULT=local
+#    volumes:
+#      - anythingllm_data:/app/server/storage
+#    networks:
+#      - llm_network
+#    depends_on:
+#      - ollama
+#      - chroma
+#    restart: unless-stopped
 
   flowwise:
-    image: flowwiseai/flowwise:latest
+    image: flowiseai/flowise:latest
     container_name: flowwise
     ports:
       - "3000:3000"
     environment:
       - FLOWWISE_USERNAME=admin@flowwise.ai
-      - FLOWWISE_PASSWORD=changeme123
+      - FLOWWISE_PASSWORD=Fiserv#123
       - OLLAMA_HOST=http://ollama:11434
     volumes:
       - flowwise_data:/app/data
       - /Users/pjaiswal/Documents:/app/public/uploads
     networks:
-      - llm_network
+      - llm-network
     depends_on:
       - ollama
       - chroma
-    command: >
-      sh -c "
-        mkdir -p /app/public/uploads &&
-        flowwise
-      "
     restart: unless-stopped
 
 volumes:
   ollama_data:
   chroma_data:
-  anythingllm_data:
+#  anythingllm_data:
   flowwise_data:
 
 networks:
