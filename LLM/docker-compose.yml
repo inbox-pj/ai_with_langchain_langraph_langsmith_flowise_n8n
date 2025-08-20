@@ -13,45 +13,20 @@ services:
       - llm-network
     restart: unless-stopped
 
-  chroma:
-    image: chromadb/chroma:latest
-    container_name: chroma
-    ports:
-      - "8000:8000"
+  pgvector:
+    image: pgvector/pgvector:0.8.0-pg17-bookworm
+    container_name: pgvector
     environment:
-      - CHROMA_SERVER_HOST=0.0.0.0
-      - CHROMA_SERVER_HTTP_PORT=8000
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vectord_db
+    ports:
+      - "5432:5432"
     volumes:
-      - chroma_data:/data
+      - pgvector_data:/var/lib/p
     networks:
       - llm-network
     restart: unless-stopped
-
-#  anythingllm:
-#    image: mintplexlabs/anythingllm:latest
-#    container_name: anythingllm
-#    ports:
-#      - "3001:3001"
-#    environment:
-#      - STORAGE_DIR=/app/server/storage
-#      - DATABASE_PATH=/app/server/storage/db.sqlite
-#      - SERVER_PORT=3001
-#      - DOTENV=|
-#        OLLAMA_BASE_URL=http://ollama:11434
-#        EMBEDDING_ENGINE=ollama
-#        OLLAMA_MODEL=gemma3:1b
-#        VECTOR_DB=chroma
-#        CHROMA_SERVER_URL=http://chroma:8000
-#        DEFAULT_VAULT=local
-#    volumes:
-#      - anythingllm_data:/app/server/storage
-#    networks:
-#      - llm_network
-#    depends_on:
-#      - ollama
-#      - chroma
-#    restart: unless-stopped
 
   flowwise:
     image: flowiseai/flowise:latest
@@ -70,13 +45,13 @@ services:
     depends_on:
       - ollama
       - chroma
+      - pgvector
     restart: unless-stopped
 
 volumes:
   ollama_data:
-  chroma_data:
-#  anythingllm_data:
   flowwise_data:
+  pgvector_data:
 
 networks:
   llm-network:
