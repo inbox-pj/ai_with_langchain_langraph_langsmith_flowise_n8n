@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   pgvector:
-    image: ankane/pgvector
+    image: ankane/pgvector:latest
     container_name: pgvector
     environment:
       POSTGRES_USER: postgres
@@ -44,7 +44,6 @@ services:
       - llm-network
     depends_on:
       - ollama
-      - chroma
       - pgvector
     restart: unless-stopped
 
