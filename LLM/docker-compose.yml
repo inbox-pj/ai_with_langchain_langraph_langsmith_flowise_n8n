@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   pgvector:
-    image: pgvector/pgvector:0.8.0-pg17-bookworm
+    image: ankane/pgvector
     container_name: pgvector
     environment:
       POSTGRES_USER: postgres
