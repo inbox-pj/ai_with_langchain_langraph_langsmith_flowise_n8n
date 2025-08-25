@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  ollama:
+    build: .
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    networks:
+      - llm-network
+    restart: unless-stopped
+
+  pgvector:
+    image: ankane/pgvector:latest
+    container_name: pgvector
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vectord_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgvector_data:/var/lib/p
+    networks:
+      - llm-network
+    restart: unless-stopped
+
+  flowwise:
+    image: flowiseai/flowise:latest
+    container_name: flowwise
+    ports:
+      - "3000:3000"
+    environment:
+      - FLOWWISE_USERNAME=admin@flowwise.ai
+      - FLOWWISE_PASSWORD=Fiserv#123
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - flowwise_data:/app/data
+      - /Users/pjaiswal/Documents:/app/public/uploads
+    networks:
+      - llm-network
+    depends_on:
+      - ollama
+      - pgvector
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  flowwise_data:
+  pgvector_data:
+
+networks:
+  llm-network:
+    driver: bridge
