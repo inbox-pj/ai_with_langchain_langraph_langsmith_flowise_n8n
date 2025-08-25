@@ -1,3 +1,61 @@
+# Flowise - Visual LLM Flow Builder - NoCode-LowCode AI Flows
+
+### 🚀 Prerequisites
+```bash
+    # Start Flowise, pgvector and ollama with Docker
+    docker-compose up -d
+```
+
+# LangChain- AI Agents with LangChain & LangGraph 🦜🔗
+
+**LangChain and LangGraph by building real world AI Agents (Python, Latest Version 0.3.0+)**
+
+## ▶️ Getting Started 
+
+### 🛠️ Prerequisites 
+- **This is not a beginner course** - Basic software engineering concepts needed
+- Familiarity with: git, Python, environment variables, classes, testing and debugging
+- Python 3.10+
+- Any Python package manager (uv, poetry, pipenv) - but NOT conda!
+- Access to an LLM (can be open source via Ollama, or cloud providers like OpenAI, Anthropic, Gemini)
+- No Machine Learning experience needed
+
+### ⚙️ Setup Instructions 
+
+```bash
+    # Setup Virtual Environment
+    pipenv shell
+   
+    # Install dependencies
+   pipenv install langchain && \
+   pipenv install langchain-ollama  && \
+   pipenv install langchain-community  && \
+   pipenv install langchain-core  && \
+   pipenv install langchainhub  && \
+   pipenv install langchain_tavily
+   
+   # code formatter tool
+   pipenv install black
+   
+   # environment variable loader
+   pipenv install python-dotenv
+   
+   # Testing and debugging
+    pipenv install pytest
+```
+
+## 🙏 Reference 
+
+- https://python.langchain.com/docs/introduction/
+- https://python.langchain.com/docs/tutorials/llm_chain/
+- https://langchain-ai.github.io/langgraph/tutorials/introduction/
+- https://python.langchain.com/docs/integrations/chat/
+
+
+
+
+
+
 
 <img width="1645" height="751" alt="image" src="https://github.com/user-attachments/assets/e8b56e63-c736-40e4-ae5b-72f18e664d46" />
 
