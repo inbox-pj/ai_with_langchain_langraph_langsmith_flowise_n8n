@@ -2,7 +2,6 @@ version: '3.8'
 services:
   ollama:
     build: .
-    container_name: ollama
     ports:
       - "11434:11434"
     volumes:
@@ -15,28 +14,48 @@ services:
 
   pgvector:
     image: ankane/pgvector:latest
-    container_name: pgvector
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: vectord_db
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
-      - pgvector_data:/var/lib/p
+      - pgvector_data:/var/lib/postgresql/data
     networks:
       - llm-network
     restart: unless-stopped
 
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=n8n_db
+      - POSTGRES_NON_ROOT_USER=n8n_user
+      - POSTGRES_NON_ROOT_PASSWORD=postgres
+    ports:
+      - "25432:5432"
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    networks:
+      - llm-network
+
   flowwise:
     image: flowiseai/flowise:latest
-    container_name: flowwise
     ports:
       - "3000:3000"
     environment:
       - FLOWWISE_USERNAME=admin@flowwise.ai
       - FLOWWISE_PASSWORD=Fiserv#123
       - OLLAMA_HOST=http://ollama:11434
+      - DATABASE_TYPE=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_HOST=postgres
+      - DATABASE_NAME=flowise
+      - DATABASE_USER=flowise
+      - DATABASE_PASSWORD=postgres
     volumes:
       - flowwise_data:/app/data
       - /Users/pjaiswal/Documents:/app/public/uploads
@@ -45,12 +64,34 @@ services:
     depends_on:
       - ollama
       - pgvector
+      - postgres
     restart: unless-stopped
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n
+      - DB_POSTGRESDB_PASSWORD=postgres
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    ports:
+      - 5678:5678
+    volumes:
+      - n8n_storage:/home/node/.n8n
+    networks:
+      - llm-network
+    depends_on:
+      - postgres
 
 volumes:
   ollama_data:
   flowwise_data:
   pgvector_data:
+  db_storage:
+  n8n_storage:
 
 networks:
   llm-network:
