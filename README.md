@@ -1,10 +1,28 @@
 # Flowise - Visual LLM Flow Builder - NoCode-LowCode AI Flows
 
-### 🚀 Prerequisites
+## 🚀 LLM Docker Compose Stack
+This project provides a Docker Compose setup for running multiple AI and data services, including Ollama, pgvector, PostgreSQL, Flowise, and n8n.
+
+
+### Services
+- Ollama: Local LLM inference server.
+- pgvector: PostgreSQL extension for vector similarity search.
+- Postgres: Main PostgreSQL database for n8n and Flowise.
+- Flowise: Visual LLM workflow builder.
+- n8n: Workflow automation tool.
+
 ```bash
     # Start Flowise, pgvector and ollama with Docker
     docker-compose up -d
 ```
+#### Access services:
+- Ollama: http://localhost:11434
+- Flowise: http://localhost:3000
+- n8n: http://localhost:5678
+- PostgreSQL:
+-- n8n: port 25432, DB n8n_db, user n8n_user, password postgres
+-- Flowise: port 25432, DB flowise, user flowise, password postgres
+-- pgvector: port 15432, DB vectord_db, user postgres, password postgres
 
 # LangChain- AI Agents with LangChain & LangGraph 🦜🔗
 
