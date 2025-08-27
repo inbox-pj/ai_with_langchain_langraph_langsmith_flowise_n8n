@@ -20,7 +20,7 @@ This project provides a Docker Compose setup for running multiple AI and data se
 - Flowise: http://localhost:3000
 - n8n: http://localhost:5678
 - PostgreSQL:
-  - n8n: port 25432, DB n8n_db, user n8n_user, password postgres 
+  - n8n: port 25432, DB n8n, user n8n, password postgres 
   - Flowise: port 25432, DB flowise, user flowise, password postgres 
   - pgvector: port 15432, DB vectord_db, user postgres, password postgres
 
