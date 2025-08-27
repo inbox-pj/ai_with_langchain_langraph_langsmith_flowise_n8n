@@ -20,17 +20,17 @@ This project provides a Docker Compose setup for running multiple AI and data se
 - Flowise: http://localhost:3000
 - n8n: http://localhost:5678
 - PostgreSQL:
--- n8n: port 25432, DB n8n_db, user n8n_user, password postgres
--- Flowise: port 25432, DB flowise, user flowise, password postgres
--- pgvector: port 15432, DB vectord_db, user postgres, password postgres
+  - n8n: port 25432, DB n8n_db, user n8n_user, password postgres 
+  - Flowise: port 25432, DB flowise, user flowise, password postgres 
+  - pgvector: port 15432, DB vectord_db, user postgres, password postgres
 
 # LangChain- AI Agents with LangChain & LangGraph 🦜🔗
 
 **LangChain and LangGraph by building real world AI Agents (Python, Latest Version 0.3.0+)**
 
-## ▶️ Getting Started 
+## ▶️ Getting Started
 
-### 🛠️ Prerequisites 
+### 🛠️ Prerequisites
 - **This is not a beginner course** - Basic software engineering concepts needed
 - Familiarity with: git, Python, environment variables, classes, testing and debugging
 - Python 3.10+
@@ -38,7 +38,7 @@ This project provides a Docker Compose setup for running multiple AI and data se
 - Access to an LLM (can be open source via Ollama, or cloud providers like OpenAI, Anthropic, Gemini)
 - No Machine Learning experience needed
 
-### ⚙️ Setup Instructions 
+### ⚙️ Setup Instructions
 
 ```bash
     # Setup Virtual Environment
@@ -62,16 +62,12 @@ This project provides a Docker Compose setup for running multiple AI and data se
     pipenv install pytest
 ```
 
-## 🙏 Reference 
+## 🙏 Reference
 
 - https://python.langchain.com/docs/introduction/
 - https://python.langchain.com/docs/tutorials/llm_chain/
 - https://langchain-ai.github.io/langgraph/tutorials/introduction/
 - https://python.langchain.com/docs/integrations/chat/
-
-
-
-
 
 
 
