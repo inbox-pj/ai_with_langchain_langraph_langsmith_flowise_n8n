@@ -1,57 +1,48 @@
 from dotenv import load_dotenv
+from langchain_core.output_parsers import PydanticOutputParser
+from langchain_core.runnables import RunnableLambda
 
-from src.tools.tools import get_profile_url_tavily
+from src.prompts.prompt import REACT_PROMPT_WITH_FORMAT_INSTRUCTIONS
+from src.schema.schemas import AgentResponse
+from src.tools.tools import get_tools
 
 load_dotenv()
 
 from langchain_ollama import ChatOllama
 from langchain.prompts.prompt import PromptTemplate
-from langchain_core.tools import Tool
-from langchain.agents import (
-    create_react_agent,
-    AgentExecutor,
-)
-from langchain import hub
+from langchain.agents import AgentExecutor
+from langchain.agents.react.agent import create_react_agent
 
 
-def lookup(name: str) -> str:
+def lookup() -> str:
     llm = ChatOllama(
-        temperature=0,
-        model="llama3.2:latest",
+        temperature=0, model="llama3.2:latest", base_url="http://localhost:11434"
     )
-    template = (
-        "Given the full name {name_of_person}, return ONLY the LinkedIn profile page URL for this person. "
-        "Do not include any explanation, markdown, or extra text. If you find the URL, output it and STOP."
+    output_parser = PydanticOutputParser(pydantic_object=AgentResponse)
+
+    react_prompt_with_format_instructions = PromptTemplate(
+        template=REACT_PROMPT_WITH_FORMAT_INSTRUCTIONS,
+        input_variables=["input", "agent_scratchpad", "tool_names"],
+    ).partial(format_instructions=output_parser.get_format_instructions())
+
+    agent = create_react_agent(
+        llm=llm, tools=get_tools(), prompt=react_prompt_with_format_instructions
+    )
+    agent_executor = AgentExecutor(agent=agent, tools=get_tools(), verbose=True)
+    extract_output = RunnableLambda(lambda x: x["output"])
+    parse_output = RunnableLambda(lambda x: output_parser.parse(x))
+
+    chain = agent_executor | extract_output | parse_output
+
+    result = chain.invoke(
+        input={
+            "input": "search for 3 job postings for an ai engineer using langchain in the Noida, India on linkedin and list their details",
+        }
     )
 
-    prompt_template = PromptTemplate(
-        template=template, input_variables=["name_of_person"]
-    )
-    tools_for_agent = [
-        Tool(
-            name="linkedin_profile_page",
-            func=get_profile_url_tavily,
-            description="useful for when you need get the Linkedin Page URL",
-        )
-    ]
-
-    react_prompt = hub.pull("hwchase17/react")
-    agent = create_react_agent(llm=llm, tools=tools_for_agent, prompt=react_prompt)
-    agent_executor = AgentExecutor(
-        agent=agent,
-        tools=tools_for_agent,
-        verbose=True,
-        return_intermediate_steps=False,  # Prevent repeated tool calls
-    )
-
-    result = agent_executor.invoke(
-        input={"input": prompt_template.format_prompt(name_of_person=name)},
-        handle_parsing_errors=True,  # Add this argument
-    )
-
-    linked_profile_url = result["output"]
-    return linked_profile_url
+    print(result)
+    return result
 
 
 if __name__ == "__main__":
-    print(lookup(name="Pankaj Jaiswal Fiserv Noida"))
+    lookup()
