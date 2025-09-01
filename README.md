@@ -24,9 +24,13 @@ This project provides a Docker Compose setup for running multiple AI and data se
   - Flowise: port 25432, DB flowise, user flowise, password postgres 
   - pgvector: port 15432, DB vectord_db, user postgres, password postgres
 
-# LangChain- AI Agents with LangChain & LangGraph 🦜🔗
+# LangChain 🦜🔗
+<img width="643" height="432" alt="image" src="https://github.com/user-attachments/assets/e711c3af-528f-44a6-8985-3383fdd7d0d5" />
 
-**LangChain and LangGraph by building real world AI Agents (Python, Latest Version 0.3.0+)**
+# LangSmith  🦜🔗
+<img width="1205" height="534" alt="image" src="https://github.com/user-attachments/assets/c72e4eba-4005-41c4-8e3c-5991eb4e78fc" />
+
+# LangGraph  🦜🔗
 
 ## ▶️ Getting Started
 
