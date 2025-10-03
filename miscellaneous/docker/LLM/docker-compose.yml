@@ -26,6 +26,17 @@ services:
       - llm-network
     restart: unless-stopped
 
+  qdrant:
+    image: 'qdrant/qdrant:latest'
+    ports:
+      - '6333:6333'
+      - '6334:6334'
+    volumes:
+      - qdrant_storage:/qdrant/storage:z
+    networks:
+      - llm-network
+    restart: unless-stopped
+
   postgres:
     image: postgres:latest
     environment:
@@ -92,6 +103,7 @@ volumes:
   pgvector_data:
   db_storage:
   n8n_storage:
+  qdrant_storage:
 
 networks:
   llm-network:
