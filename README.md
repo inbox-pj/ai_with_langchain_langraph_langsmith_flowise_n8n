@@ -23,6 +23,14 @@ This project provides a Docker Compose setup for running multiple AI and data se
   - n8n: port 25432, DB n8n, user n8n, password postgres 
   - Flowise: port 25432, DB flowise, user flowise, password postgres 
   - pgvector: port 15432, DB vectord_db, user postgres, password postgres
+ 
+#### Mail Server:
+- Server name : test.mailu.io
+- IP address : 173.249.45.89
+- Webmail : https://test.mailu.io/webmail/
+- Admin UI : https://test.mailu.io/admin/
+- Admin login : admin@test.mailu.io
+- Admin password : MailuDemo
 
 # LangChain 🦜🔗
 <img width="643" height="432" alt="image" src="https://github.com/user-attachments/assets/e711c3af-528f-44a6-8985-3383fdd7d0d5" />
