@@ -97,6 +97,18 @@ services:
     depends_on:
       - postgres
 
+  inbucket:
+    image: inbucket/inbucket:latest
+    ports:
+      - "9000:9000" # Web UI
+      - "2500:2500" # SMTP
+      - "1100:1100" # POP3
+    volumes:
+      - inbucket_data:/data
+    networks:
+      - llm-network
+    restart: unless-stopped
+
 volumes:
   ollama_data:
   flowwise_data:
@@ -104,6 +116,7 @@ volumes:
   db_storage:
   n8n_storage:
   qdrant_storage:
+  inbucket_data:
 
 networks:
   llm-network:
