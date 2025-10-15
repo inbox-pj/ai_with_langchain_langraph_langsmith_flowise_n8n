@@ -62,7 +62,16 @@ This project provides a Docker Compose setup for running multiple AI and data se
    pipenv install langchain-community  && \
    pipenv install langchain-core  && \
    pipenv install langchainhub  && \
-   pipenv install langchain_tavily
+   pipenv install langchain_tavily && \
+   pipenv install langsmith
+
+    # JIRA/Confluence integration
+   pipenv install jira python-dotenv openpyxl python-docx PyPDF2 python-magic atlassian-python-api html2text libmagic
+   pipenv install torch transformers pytesseract pillow speechrecognition moviepy
+   
+   # image transformation
+   brew install tesseract
+   tesseract --version
    
    # code formatter tool
    pipenv install black
