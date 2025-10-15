@@ -1,0 +1,54 @@
+{
+  "tools" : [
+    {
+      "name": "fetch_jira_requirements",
+      "description": "Run the Python script to fetch requirements from JIRA for a given jira_id: The ID of the Jira issue (e.g., MSDP-218).",
+      "command1": "python src/jira_client.py {JIRA_ID}"
+    },
+    {
+      "name": "fetch_confluence_requirements",
+      "description": "Run the Python script to fetch requirements from Confluence for a given Page Title (e.g., \"DDP PCI Vault\").",
+      "command1": "python src/confluence_client.py {PAGE_TITLE}"
+    },
+    {
+      "name": "create_user_stories",
+      "description": "Break down feature requirements from JIRA and Confluence into multiple user stories by executing the following steps:",
+      "command1": "run tool fetch_jira_requirements",
+      "command2": "run tool fetch_confluence_requirements",
+      "command3": "Break down feature requirements from JIRA and Confluence into multiple user stories for {JIRA_ID}. Follow the guidelines in #docs/user_story_prompt.md and create a Mermaid format dependency graph for the user stories. Store the details in markdown format in jira_user_stories_{JIRA_ID}.md."
+    }, 
+    {
+      "name": "create_design_document",
+      "description": "Create a detailed low-level design document for a JIRA user story.",
+      "command1": "As a Java Spring Boot API/UI Architect, create a comprehensive low-level design document with impact analysis for {JIRA_ID}. Analyze the existing code structure, key classes, and dependencies from {AST_METADATA_JSON} and {DEPENDENCY_GRAPH_DOT}. Strictly follow the template in #docs/design_document_prompt.md and save the design document in markdown format as design_document_{JIRA_ID}.md.",
+      "command2": "Reference any flow diagrams or business logic from source documentation (e.g., Confluence Draw.io diagrams) and map each step and decision point in the design. Ensure the document is developer-friendly, modular, and adheres to best practices for maintainability and separation of concerns.",
+      "command3": "Ensure all required sections are present: functional requirement summary, API endpoints (with examples), module/component details, component diagram & business flow, sequence diagram & class-level details (with textual explanation), detailed code impact analysis (with exact class names, methods, and recommended pseudocode), validation & error handling, and summary table."
+    },
+    {
+      "name": "develop_code",
+      "description": "Implement code changes for a JIRA user story.",
+      "command1": "As a Java Spring Boot API/UI Developer, implement the required code changes for {JIRA_ID}. Analyze the code structure, key classes, and dependencies from {AST_METADATA_JSON} and {DEPENDENCY_GRAPH_DOT}. Apply all changes specified in {design_document_JIRA_ID_MD}. Make sure all impacted classes are updated with the new changes.",
+      "command3": "Use the AST metadata to locate files and classes directly—do not perform wildcard or recursive searches",
+      "command4": "Reference any flow diagrams or business logic from source documentation (e.g., Confluence Draw.io diagrams) and implement those logic in the code.",
+      "command5": "Ensure that the code is modular, maintainable, and adheres to the coding standards outlined in #docs/industry_coding_standards.md."
+    },    
+    {
+      "name": "generate_unit_testcase",
+      "description": "Create JUnit test cases for a JIRA user story.",
+      "command1": "As a Java Spring Boot API/UI Developer, write JUnit test cases for all impacted classes and methods related to {JIRA_ID}, as detailed in {design_document_JIRA_ID_MD}.",
+      "command2": "Verify that code coverage meets the requirements specified in #docs/industry_coding_standards.md."
+    },
+    {
+      "name": "code_review",
+      "description": "Review code changes for a JIRA user story.",
+      "command1": "As a Java Spring Boot API/UI Developer, review the code changes for {JIRA_ID} according to #docs/industry_coding_standards.md.",
+      "command2": "Provide constructive feedback and follow the guidelines & template in #docs/code_review_template.md to provide the output in markdown format in code_review_{JIRA_ID}.md."
+    },
+    {
+      "name": "scan_build_breaker",
+      "description": "Scan the codebase for adequate code coverage and security vulnerabilities, and break the build if any are found.",
+      "command1": "Run the batch file scripts/java-build-breaker.bat.",
+      "command2": "Scan the batch file output and #SummaryReport.txt for adequate code coverage and security vulnerabilities, and break the build if any are found."
+    }
+  ]
+}
