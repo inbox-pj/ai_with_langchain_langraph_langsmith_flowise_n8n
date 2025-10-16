@@ -16,7 +16,7 @@ services:
     image: ankane/pgvector:latest
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: <<your password>>
       POSTGRES_DB: vectord_db
     ports:
       - "15432:5432"
@@ -41,10 +41,10 @@ services:
     image: postgres:latest
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=<<your password>>
       - POSTGRES_DB=n8n_db
       - POSTGRES_NON_ROOT_USER=n8n_user
-      - POSTGRES_NON_ROOT_PASSWORD=postgres
+      - POSTGRES_NON_ROOT_PASSWORD=<<your password>>
     ports:
       - "25432:5432"
     volumes:
@@ -59,14 +59,14 @@ services:
       - "3000:3000"
     environment:
       - FLOWWISE_USERNAME=admin@flowwise.ai
-      - FLOWWISE_PASSWORD=Fiserv#123
+      - FLOWWISE_PASSWORD=<<your password>>
       - OLLAMA_HOST=http://ollama:11434
       - DATABASE_TYPE=postgres
       - DATABASE_PORT=5432
       - DATABASE_HOST=postgres
       - DATABASE_NAME=flowise
       - DATABASE_USER=flowise
-      - DATABASE_PASSWORD=postgres
+      - DATABASE_PASSWORD=<<your password>>
     volumes:
       - flowwise_data:/app/data
       - /Users/pjaiswal/Documents:/app/public/uploads
@@ -86,7 +86,7 @@ services:
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=n8n
       - DB_POSTGRESDB_USER=n8n
-      - DB_POSTGRESDB_PASSWORD=postgres
+      - DB_POSTGRESDB_PASSWORD=<<your password>>
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
     ports:
       - 5678:5678
