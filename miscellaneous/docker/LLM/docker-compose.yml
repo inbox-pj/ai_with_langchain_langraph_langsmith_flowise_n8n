@@ -1,5 +1,19 @@
 version: '3.8'
 services:
+  dataiku-dss:
+    image: dataiku/dss:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vectord_db
+    ports:
+      - "10000:10000"
+    volumes:
+      - dataiku_dss:/home/dataiku/dss
+    networks:
+      - llm-network
+    restart: unless-stopped
+
   ollama:
     build: .
     ports:
@@ -16,7 +30,7 @@ services:
     image: ankane/pgvector:latest
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: <<your password>>
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: vectord_db
     ports:
       - "15432:5432"
@@ -41,10 +55,10 @@ services:
     image: postgres:latest
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=<<your password>>
+      - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=n8n_db
       - POSTGRES_NON_ROOT_USER=n8n_user
-      - POSTGRES_NON_ROOT_PASSWORD=<<your password>>
+      - POSTGRES_NON_ROOT_PASSWORD=postgres
     ports:
       - "25432:5432"
     volumes:
@@ -59,14 +73,14 @@ services:
       - "3000:3000"
     environment:
       - FLOWWISE_USERNAME=admin@flowwise.ai
-      - FLOWWISE_PASSWORD=<<your password>>
+      - FLOWWISE_PASSWORD=Fiserv#123
       - OLLAMA_HOST=http://ollama:11434
       - DATABASE_TYPE=postgres
       - DATABASE_PORT=5432
       - DATABASE_HOST=postgres
       - DATABASE_NAME=flowise
       - DATABASE_USER=flowise
-      - DATABASE_PASSWORD=<<your password>>
+      - DATABASE_PASSWORD=postgres
     volumes:
       - flowwise_data:/app/data
       - /Users/pjaiswal/Documents:/app/public/uploads
@@ -86,7 +100,7 @@ services:
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=n8n
       - DB_POSTGRESDB_USER=n8n
-      - DB_POSTGRESDB_PASSWORD=<<your password>>
+      - DB_POSTGRESDB_PASSWORD=postgres
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
     ports:
       - 5678:5678
@@ -100,7 +114,7 @@ services:
   inbucket:
     image: inbucket/inbucket:latest
     ports:
-      - "9000:9000" # Web UI
+      - "9001:9000" # Web UI
       - "2500:2500" # SMTP
       - "1100:1100" # POP3
     volumes:
@@ -117,6 +131,7 @@ volumes:
   n8n_storage:
   qdrant_storage:
   inbucket_data:
+  dataiku_dss:
 
 networks:
   llm-network:
